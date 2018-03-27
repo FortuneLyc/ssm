@@ -11,26 +11,13 @@
     <description>spring全局配置信息</description>
     <param-name>contextConfigLocation</param-name>
     <param-value>
-      classpath:spring.xml,
+      classpath:spring.xml,  <!-- 其中包含spring-mybatis.xml配置文件-->
       classpath:spring-quartz.xml
     </param-value>
   </context-param>
 
 
-  <!-- 配置文件监听器 -->
-  <listener>
-    <description>自定义监听兼容Spring监听器</description>
-    <!--<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>-->
-    <listener-class>org.guan.framework.listener.InitListener</listener-class>
-  </listener>
-  <listener>
-    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
-  </listener>
-  <!--listener>
-      <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-  </listener-->
-
-  <!--过滤器-->
+  <!--编码过滤器-->
   <filter>
     <description>字符集过滤器</description>
     <filter-name>encodingFilter</filter-name>
@@ -45,6 +32,17 @@
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+  <!-- spring监听器 -->
+  <listener>
+    <description>自定义监听兼容Spring监听器</description>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    <!--<listener-class>org.lyc.framework.listener.InitListener</listener-class>-->
+  </listener>
+  <!-- 防止Spring内存溢出监听器 -->
+  <listener>
+    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+  </listener>
 
   <!--filter>
     <description>登录鉴权过滤器</description>

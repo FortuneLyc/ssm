@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--配置数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- DruidDataSource中，可以不配置DriverClass，它根据url自动识别。Druid能够自动识别20多中url，常见的JDBC Driver都包括了。-->
+        <property name="driverClassName" value="${jdbc.mysql.driverClassName}"/>
+        <property name="url" value="${jdbc.mysql.url}"/>
+        <property name="username" value="${jdbc.mysql.username}"/>
+        <property name="password" value="${jdbc.mysql.password}"/>
+        <property name="validationQuery" value="${jdbc.mysql.validationQuery}"/>
+
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="5"/>
+        <!-- 连接池最大使用连接数量 -->
+        <property name="maxActive" value="100"/>
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="5"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000"/>
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="25200000"/>
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="false" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="false"/>
+        <!-- 1800秒，也就是30分钟 -->
+        <property name="removeAbandonedTimeout" value="1800"/>
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="true"/>
+
+        <!-- 监控数据库 -->
+        <!-- <property name="filters" value="stat" /> -->
+        <!-- 配置StatFilter的mergeSql属性 合并输出sql-->
+        <property name="filters" value="mergeStat"/>
+    </bean>
+
+    <!--mybatis文件-->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 注入数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 自动扫描entity目录, 省掉Configuration.xml的手工配置里 -->
+        <!--<property name="configLocation" value="classpath:mybatis-config.xml"></property>-->
+        <property name="typeAliasesPackage" value="com.lyc.platform.sys.bean" />
+        <!-- 自动扫描mapping.xml文件 -->
+        <property name="mapperLocations">
+            <array>
+                <value>classpath:org/lyc/platform/*/bean/*.xml</value>
+            </array>
+        </property>
+        <property name="configurationProperties">
+            <props>
+                <prop key="cacheEnabled">false</prop>
+                <prop key="lazyLoadingEnabled">false</prop>
+                <prop key="defaultExecutorType">REUSE</prop>
+            </props>
+        </property>
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageHelper">
+                    <property name="properties">
+                        <value>
+                            dialect=mysql
+                            <!-- 该参数默认为false -->
+                            <!-- 设置为true时，会将RowBounds第一个参数offset当成pageNum页码使用 -->
+                            <!-- 和startPage中的pageNum效果一样-->
+                            offsetAsPageNum=true
+                            <!-- 该参数默认为false -->
+                            <!-- 设置为true时，使用RowBounds分页会进行count查询 -->
+                            rowBoundsWithCount=true
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <!--自动扫描Dao,并将mybatis文件注入-->
+    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <property name="basePackage" value="org.lyc.platform.*.dao" />
+        <property name="properties">
+            <value>
+                mappers=tk.mybatis.mapper.common.Mapper
+            </value>
+        </property>
+    </bean>
+</beans>
