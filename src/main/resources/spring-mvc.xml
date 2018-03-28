@@ -13,7 +13,7 @@
 
     <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
     <context:annotation-config/>
-    <context:component-scan base-package="org.lyc.ssm" use-default-filters="false">
+    <context:component-scan base-package="org.lyc.platform" use-default-filters="false">
         <context:include-filter type="annotation"
                                 expression="org.springframework.stereotype.Controller"/>
         <context:include-filter type="annotation"
@@ -27,7 +27,8 @@
     <mvc:annotation-driven>
         <!-- 消息转换器 -->
         <mvc:message-converters register-defaults="true">
-            <ref bean="messageConverters"/>
+            <ref bean="stringHttpMessageConverter"/>
+            <ref bean="fastJsonHttpMessageConverter"/>
         </mvc:message-converters>
     </mvc:annotation-driven>
 
@@ -63,13 +64,13 @@
                 <value>BeanToArray</value>
             </util:list>
         </property>
-        <property name="fastJsonConfig">
-            <array value-type="com.alibaba.fastjson.serializer.SerializerFeature">
-                <value>QuoteFieldNames</value>
-                <value>WriteDateUseDateFormat</value>
-                <value>BeanToArray</value>
-            </array>
-        </property>
+        <!--<property name="fastJsonConfig">-->
+            <!--<array value-type="com.alibaba.fastjson.serializer.SerializerFeature">-->
+                <!--<value>QuoteFieldNames</value>-->
+                <!--<value>WriteDateUseDateFormat</value>-->
+                <!--<value>BeanToArray</value>-->
+            <!--</array>-->
+        <!--</property>-->
     </bean>
 
     <!-- 静态资源映射 -->
