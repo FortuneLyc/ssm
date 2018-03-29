@@ -41,7 +41,7 @@
         <constructor-arg index="0" value="UTF-8"/>
         <property name="supportedMediaTypes">
             <list>
-                <value>application/plain;charset=UTF-8</value>
+                <!--<value>application/plain;charset=UTF-8</value>-->
                 <value>text/html;charset=UTF-8</value>
                 <value>application/json;charset=UTF-8</value>
                 <value>application/xml;charset=UTF-8</value>
@@ -58,10 +58,10 @@
         </property>
         <property name="features">
             <util:list>
-                <value>WriteMapNullValue</value>
+                <!--<value>WriteMapNullValue</value>-->
                 <value>QuoteFieldNames</value>
                 <value>WriteDateUseDateFormat</value>
-                <value>BeanToArray</value>
+                <!--<value>BeanToArray</value>-->
             </util:list>
         </property>
         <!--<property name="fastJsonConfig">-->

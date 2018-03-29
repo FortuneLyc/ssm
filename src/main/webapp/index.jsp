@@ -8,5 +8,8 @@
 <a href="platform/sys/user/test?user_id=1&user_name=admin&password=admin">
     测试springmvc
 </a>
+<a href="platform/sys/user/redisTest?user_id=1&user_name=admin&password=admin">
+    测试redis
+</a>
 </body>
 </html>
